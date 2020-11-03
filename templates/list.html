@@ -1,0 +1,70 @@
+{% extends "templates\base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="">
+    <a href="{% url 'forms' %}" class="btn btn-outline-success">
+        <i class="fas fa-plus"></i> Add
+    </a>
+    <a href="{% url 'import_csv' %}" class="btn btn-outline-success">
+        <i class="fas fa-plus"></i> Import Category
+    </a>
+</div>
+<br/>
+<div class="row">
+	<div class="col">
+			<form method="get">        
+                <div class="row">
+                    <div class="col-md-3">
+                        {{filter.form.name|as_crispy_field:"bootstrap"}}
+                    </div>
+                    <div class="col-md-2">
+                        {{filter.form.description|as_crispy_field:"bootstrap"}}
+                    </div>
+                    <div class="col-md-2">
+                        {{filter.form.value|as_crispy_field:"bootstrap"}}
+                    </div>
+                    <div class="col-md-3">
+                        {{filter.form.category|as_crispy_field:"bootstrap"}}
+                    </div>
+                    <button class="btn btn-outline-success"  type="submit">Search</button>
+                </div>
+		  </form>
+	</div>
+</div>
+<table class="table table-borderless">
+
+    <thead class="border-bottom font-weight-bold">
+        {% csrf_token %}
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Value</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for var in list %}
+            <tr> 
+                <td>{{var.name}}</td>
+                <td>{{var.description}}</td>
+                <td>{{var.value}}</td>
+                <td>{{var.category_name}}</td>
+                <td>
+                    <a href="{% url 'update' var.id %}" class="btn text-secondary px-0">
+                        <i class="far fa-edit fa-lg"></i>
+                    </a>
+                    <form action="{% url 'delete' var.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
